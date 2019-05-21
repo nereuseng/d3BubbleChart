@@ -33,8 +33,6 @@
 import * as d3 from "d3";
 import Popup from "@/components/Popup.vue";
 import debounce from "lodash.debounce";
-// import axios from "axios";
-// import dataCsv from "../information/data.csv";
 
 export default {
   components: {
@@ -64,9 +62,8 @@ export default {
   },
 
   async mounted() {
-    window.d3 = d3;
     this.diameter = this.getDiameter();
-    this.dataset = await this.getCsvData();
+    this.dataset = await this.getDataSet();
     this.renderD3();
 
     window.addEventListener(
@@ -91,7 +88,7 @@ export default {
   },
 
   methods: {
-    getCsvData() {
+    getDataSet() {
       return d3.csv("/data.csv").then(data => data);
     },
 
@@ -191,11 +188,10 @@ export default {
     },
 
     checkDotsText() {
+      this.dots.selectAll("text").remove();
+
       if (window.innerWidth > 768) {
-        this.dots.selectAll("text").remove();
         this.setDotsText();
-      } else {
-        this.dots.selectAll("text").remove();
       }
     },
 
@@ -338,10 +334,9 @@ export default {
     splitBubbles(type) {
       const typeMovementHandler = this.getTypeMovement(type);
 
+      this.hideTitles();
+
       if (type === "all") {
-        this.hideTitles();
-      } else {
-        this.hideTitles();
         this.showTitles(type);
       }
 
